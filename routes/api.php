@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -13,6 +14,12 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+
+Route::controller(AuthController::class)->middleware(['guest', 'throttle:10:2'])
+    ->group(function () {
+        Route::post('login', 'login')->name('login');
+    });
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::controller(UserController::class)->prefix('user')->group(function () {
