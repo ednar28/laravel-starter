@@ -23,9 +23,12 @@ class AuthControllerTest extends TestCase
             'remember' => true,
         ];
 
-        $this->postJson(route('login'), $form)->assertOk()->assertJson(fn (AssertableJson $json) =>
+        $this->postJson(route('login'), $form)->assertOk()->assertJson(
+            fn (AssertableJson $json) =>
             $json->has('token')
-                ->has('user', fn (AssertableJson $json) =>
+                ->has(
+                    'user',
+                    fn (AssertableJson $json) =>
                     $json->where('id', $user->id)
                         ->where('name', $user->name)
                         ->where('email', $user->email)
@@ -33,7 +36,7 @@ class AuthControllerTest extends TestCase
                         ->where('created_at', $user->created_at->toJSON())
                         ->where('updated_at', $user->updated_at->toJSON())
                         ->where('deleted_at', null)
-            )
+                )
         );
 
         $this->assertAuthenticatedAs($user);

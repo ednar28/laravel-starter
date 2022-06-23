@@ -23,7 +23,6 @@ class UserControllerTest extends TestCaseController
         $this->url = route('user.index');
     }
 
-
     /**
      * Test UserController@index. Should has these attributes.
      *
@@ -34,13 +33,19 @@ class UserControllerTest extends TestCaseController
         $user = User::factory()->create();
         $user->assignRole(Roles::SUPERADMIN->value);
 
-        $this->jsonGet()->assertOk()->assertJson(fn (AssertableJson $json) =>
+        $this->jsonGet()->assertOk()->assertJson(
+            fn (AssertableJson $json) =>
             $json
-                ->has('data', 1, fn ($json) =>
+                ->has(
+                    'data',
+                    1,
+                    fn ($json) =>
                     $json->where('id', $user->id)
                         ->where('name', $user->name)
                         ->where('email', $user->email)
-                        ->has('role', fn (AssertableJson $json) =>
+                        ->has(
+                            'role',
+                            fn (AssertableJson $json) =>
                             $json->where('id', $user->roles[0]->id)
                                 ->where('name', $user->roles[0]->name)
                         )
@@ -50,7 +55,9 @@ class UserControllerTest extends TestCaseController
                         ->where('updated_at', $user->created_at->toJSON())
                         ->where('deleted_at', null)
                 )
-                ->has('meta', fn ($json) =>
+                ->has(
+                    'meta',
+                    fn ($json) =>
                     $json->where('current_page', 1)
                         ->where('from', 1)
                         ->where('last_page', 1)
@@ -140,7 +147,8 @@ class UserControllerTest extends TestCaseController
         $user = User::factory()->create();
         $user->assignRole(Roles::SUPERADMIN->value);
 
-        $this->jsonGet($user->id)->assertOk()->assertJson(fn (AssertableJson $json) =>
+        $this->jsonGet($user->id)->assertOk()->assertJson(
+            fn (AssertableJson $json) =>
             $json->where('id', $user->id)
                 ->where('name', $user->name)
                 ->where('email', $user->email)
@@ -148,7 +156,9 @@ class UserControllerTest extends TestCaseController
                 ->where('created_at', $user->created_at->toJSON())
                 ->where('updated_at', $user->updated_at->toJSON())
                 ->where('deleted_at', null)
-                ->has('role', fn ($json) =>
+                ->has(
+                    'role',
+                    fn ($json) =>
                     $json->where('id', $user->roles[0]->id)
                         ->where('name', $user->roles[0]->name)
                 )
@@ -202,7 +212,8 @@ class UserControllerTest extends TestCaseController
         $user = User::factory()->create();
         $user->assignRole(Roles::SUPERADMIN->value);
 
-        $this->jsonDelete($user->id)->assertOk()->assertJson(fn (AssertableJson $json) =>
+        $this->jsonDelete($user->id)->assertOk()->assertJson(
+            fn (AssertableJson $json) =>
             $json->where('id', $user->id)
                 ->where('deleted_at', now()->toJSON())
         );
